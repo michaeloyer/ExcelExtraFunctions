@@ -44,9 +44,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="OptionalParameterObjectExtensions.cs" />
-    <Compile Include="RangeObjectExtensions.cs" />
-    <Compile Include="RegularExpressions.cs" />
+    <Compile Include="Extensions\OptionalParameterObjectExtensions.cs" />
+    <Compile Include="Extensions\RangeObjectExtensions.cs" />
+    <Compile Include="Functions\RegularExpressions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

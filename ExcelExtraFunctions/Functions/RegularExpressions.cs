@@ -2,7 +2,7 @@
 using ExcelDna.Integration;
 using System.Linq;
 
-namespace ExcelExtraFunctions
+namespace ExcelExtraFunctions.Functions
 {
     public static class RegularExpressions
     {

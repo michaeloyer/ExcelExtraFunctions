@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ExcelDna.Integration;
 
-namespace ExcelExtraFunctions
+namespace ExcelExtraFunctions.Extensions
 {
     internal static class OptionalParameterObjectExtensions
     {
