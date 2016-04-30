@@ -47,6 +47,20 @@ namespace ExcelExtraFunctions
                 return ExcelError.ExcelErrorValue;
         }
 
-
+        [ExcelFunction(Category = "EXF Regular Expression", Name = "RE.SUBMATCHES",
+            Description = "Returns array of submatches of the first matched pattern in the input string.")]
+        public static object Submatches(string input, string pattern)
+        {
+            if (Regex.IsMatch(input, pattern))
+            {
+                return Regex.Match(input, pattern).Groups
+                    .Cast<Group>()
+                    .Select(g => g.Value)
+                    .Skip(1)
+                    .ToArray();
+            }
+            else
+                return ExcelError.ExcelErrorValue;
+        }
     }
 }
