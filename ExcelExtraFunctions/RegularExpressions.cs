@@ -1,5 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 using ExcelDna.Integration;
+using System.Linq;
 
 namespace ExcelExtraFunctions
 {
@@ -30,5 +31,22 @@ namespace ExcelExtraFunctions
         [ExcelFunction(Category = "EXF Regular Expression", Name = "RE.MATCH",
             Description = "Returns the first matched pattern in the input string.")]
         public static object Match(string input, string pattern) => Regex.Match(input, pattern);
+
+        [ExcelFunction(Category = "EXF Regular Expression", Name = "RE.MATCHES",
+            Description = "Returns array of matched patterns in the input string.")]
+        public static object Matches(string input, string pattern)
+        {
+            if (Regex.IsMatch(input, pattern))
+            {
+                return Regex.Matches(input, pattern)
+                    .Cast<Match>()
+                    .Select(m => m.Value)
+                    .ToArray();                    
+            }
+            else
+                return ExcelError.ExcelErrorValue;
+        }
+
+
     }
 }
