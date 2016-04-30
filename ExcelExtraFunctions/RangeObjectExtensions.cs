@@ -8,5 +8,14 @@ namespace ExcelExtraFunctions
 {
     internal static class RangeObjectExtensions
     {
+        internal static int RowCount(this object[,] range)
+        {
+            return range.GetLength(0);
+        }
+
+        internal static int ColumnCount(this object[,] range)
+        {
+            return range.GetLength(1);
+        }
     }
 }
