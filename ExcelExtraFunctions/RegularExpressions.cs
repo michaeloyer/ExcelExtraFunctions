@@ -22,5 +22,9 @@ namespace ExcelExtraFunctions
         [ExcelFunction(Category = "EXF Regular Expression", Name = "RE.COUNT", 
             Description = "Counts the number of pattern matches in the input.")]
         public static int Count(string input, string pattern) => Regex.Matches(input, pattern).Count;
+
+        [ExcelFunction(Category = "EXF Regular Expression", Name = "RE.SPLIT",
+            Description = "Splits the input string at each matched pattern and returns the array.")]
+        public static object Split(string input, string pattern) => Regex.Split(input, pattern);
     }
 }
