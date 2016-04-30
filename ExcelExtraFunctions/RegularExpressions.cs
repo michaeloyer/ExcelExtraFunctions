@@ -26,5 +26,9 @@ namespace ExcelExtraFunctions
         [ExcelFunction(Category = "EXF Regular Expression", Name = "RE.SPLIT",
             Description = "Splits the input string at each matched pattern and returns the array.")]
         public static object Split(string input, string pattern) => Regex.Split(input, pattern);
+
+        [ExcelFunction(Category = "EXF Regular Expression", Name = "RE.MATCH",
+            Description = "Returns the first matched pattern in the input string.")]
+        public static object Match(string input, string pattern) => Regex.Match(input, pattern);
     }
 }
