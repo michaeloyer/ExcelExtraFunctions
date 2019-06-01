@@ -9,7 +9,10 @@ namespace ExcelExtraFunctions.Functions
     {
         [ExcelFunction(Category = "EXF Regular Expression", Name = "RE.ISMATCH",
             Description = "Returns TRUE if a single pattern match is found in the input, otherwise FALSE")]
-        public static bool IsMatch(string input, string pattern) => Regex.IsMatch(input, pattern);
+        public static object IsMatch(string input, string pattern) =>
+            string.IsNullOrEmpty(pattern)
+                ? (object)ExcelErrorValue
+                : Regex.IsMatch(input, pattern);
 
         [ExcelFunction(Category = "EXF Regular Expression", Name = "RE.ESCAPE",
             Description = "Puts a '\' (backslash) character in front of all regex modifier characters")]
@@ -17,18 +20,26 @@ namespace ExcelExtraFunctions.Functions
 
         [ExcelFunction(Category = "EXF Regular Expression", Name = "RE.REPLACE",
             Description = "Replaces all pattern matches in the input with the replacement string.")]
-        public static string Replace(string input, string pattern,
+        public static object Replace(string input, string pattern,
             [ExcelArgument("If a capture group is used it can be reference with $1, or if is explicitly referenced you can use $Name")]
             string replacement
-        ) => Regex.Replace(input, pattern, replacement);
+        ) => string.IsNullOrEmpty(pattern)
+                ? (object)ExcelErrorValue
+                : Regex.Replace(input, pattern, replacement);
 
         [ExcelFunction(Category = "EXF Regular Expression", Name = "RE.COUNT",
             Description = "Counts the number of pattern matches in the input.")]
-        public static int Count(string input, string pattern) => Regex.Matches(input, pattern).Count;
+        public static object Count(string input, string pattern) =>
+            string.IsNullOrEmpty(pattern)
+                ? (object)ExcelErrorValue
+                : Regex.Matches(input, pattern).Count;
 
         [ExcelFunction(Category = "EXF Regular Expression", Name = "RE.SPLIT",
             Description = "Splits the input string at each matched pattern and returns the array.")]
-        public static object Split(string input, string pattern) => Regex.Split(input, pattern);
+        public static object Split(string input, string pattern) =>
+            string.IsNullOrEmpty(pattern)
+                ? (object)ExcelErrorValue
+                : Regex.Split(input, pattern);
 
         [ExcelFunction(Category = "EXF Regular Expression", Name = "RE.MATCH",
             Description = "Returns the first matched pattern in the input string.")]

@@ -12,7 +12,8 @@ namespace ExcelExtraFunctions.Tests
         [DataTestMethod]
         [DataRow("abc123", "[a-c]{3}[1-3]{3}", true)]
         [DataRow("abc123", "[x-z]{3}[4-9]{3}", false)]
-        public void IsMatch_Tests(string source, string pattern, bool result)
+        [DataRow("abc123", "", ExcelErrorValue)]
+        public void IsMatch_Tests(string source, string pattern, object result)
         {
             IsMatch(source, pattern).Should().Be(result);
         }
@@ -73,6 +74,56 @@ namespace ExcelExtraFunctions.Tests
         public void Groups_Errors(string source, string pattern, ExcelError result)
         {
             Groups(source, pattern).Should().Be(result);
+        }
+
+        [DataTestMethod]
+        [DataRow("", "")]
+        [DataRow("abc", "abc")]
+        [DataRow("(abc)", @"\(abc\)")]
+        public void Escape_Tests(string pattern, string result)
+        {
+            Escape(pattern).Should().Be(result);
+        }
+
+        [DataTestMethod]
+        [DataRow("a1b2c3", "[a-z]", "", "123")]
+        [DataRow("a1b2c3", @"\d", "x", "axbxcx")]
+        [DataRow("abc123", "[x-z]{3}[4-9]{3}", "", "abc123")]
+        [DataRow("abc123", "", "abc", ExcelErrorValue)]
+        public void Replace_Tests(string source, string pattern, string replacement, object result)
+        {
+            Replace(source, pattern, replacement).Should().Be(result);
+        }
+
+        [DataTestMethod]
+        [DataRow("a1b2c3", "[a-c][1-3]", 3)]
+        [DataRow("abc123", "[a-c][1-3]", 1)]
+        [DataRow("a1b2c3", "[b-c][1-3]", 2)]
+        [DataRow("abc123", "[x-z]{3}[4-9]{3}", 0)]
+        [DataRow("abc123", "", ExcelErrorValue)]
+        public void Count_Tests(string source, string pattern, object result)
+        {
+            Count(source, pattern).Should().Be(result);
+        }
+
+        [TestMethod]
+        public void Split_OnSuccessReturnArray()
+        {
+            Split("a1b2c3", @"\d")
+                .Should().BeEquivalentTo(new[] { "a", "b", "c", "" });
+        }
+
+        [TestMethod]
+        public void Split_OnNoMatchReturnsArrayOfFullString()
+        {
+            Split("a1b2c3", "z")
+                .Should().BeEquivalentTo(new[] { "a1b2c3" });
+        }
+
+        [TestMethod]
+        public void Split_EmptyPatternReturnsError()
+        {
+            Split("abc123", "").Should().Be(ExcelErrorValue);
         }
     }
 }
