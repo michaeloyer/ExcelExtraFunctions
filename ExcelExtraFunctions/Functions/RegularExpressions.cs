@@ -1,6 +1,7 @@
-﻿using System.Text.RegularExpressions;
-using ExcelDna.Integration;
+﻿using ExcelDna.Integration;
 using System.Linq;
+using System.Text.RegularExpressions;
+using static ExcelDna.Integration.ExcelError;
 
 namespace ExcelExtraFunctions.Functions
 {
@@ -16,11 +17,11 @@ namespace ExcelExtraFunctions.Functions
 
         [ExcelFunction(Category = "EXF Regular Expression", Name = "RE.REPLACE",
             Description = "Replaces all pattern matches in the input with the replacement string.")]
-        public static string Replace(string input, string pattern, 
+        public static string Replace(string input, string pattern,
             [ExcelArgument("If a capture group is used it can be reference with $1, or if is explicitly referenced you can use $Name")] string replacement
             ) => Regex.Replace(input, pattern, replacement);
 
-        [ExcelFunction(Category = "EXF Regular Expression", Name = "RE.COUNT", 
+        [ExcelFunction(Category = "EXF Regular Expression", Name = "RE.COUNT",
             Description = "Counts the number of pattern matches in the input.")]
         public static int Count(string input, string pattern) => Regex.Matches(input, pattern).Count;
 
@@ -30,7 +31,16 @@ namespace ExcelExtraFunctions.Functions
 
         [ExcelFunction(Category = "EXF Regular Expression", Name = "RE.MATCH",
             Description = "Returns the first matched pattern in the input string.")]
-        public static object Match(string input, string pattern) => Regex.Match(input, pattern);
+        public static object Match(string input, string pattern)
+        {
+            if (string.IsNullOrEmpty(pattern))
+                return ExcelErrorValue;
+
+            Match match = Regex.Match(input, pattern);
+            return match.Success
+                ? match.Value
+                : (object)ExcelErrorNA;
+        }
 
         [ExcelFunction(Category = "EXF Regular Expression", Name = "RE.MATCHES",
             Description = "Returns array of matched patterns in the input string.")]
@@ -41,7 +51,7 @@ namespace ExcelExtraFunctions.Functions
                 return Regex.Matches(input, pattern)
                     .Cast<Match>()
                     .Select(m => m.Value)
-                    .ToArray();                    
+                    .ToArray();
             }
             else
                 return ExcelError.ExcelErrorValue;
