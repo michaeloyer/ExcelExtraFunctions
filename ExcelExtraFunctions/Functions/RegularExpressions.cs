@@ -18,8 +18,9 @@ namespace ExcelExtraFunctions.Functions
         [ExcelFunction(Category = "EXF Regular Expression", Name = "RE.REPLACE",
             Description = "Replaces all pattern matches in the input with the replacement string.")]
         public static string Replace(string input, string pattern,
-            [ExcelArgument("If a capture group is used it can be reference with $1, or if is explicitly referenced you can use $Name")] string replacement
-            ) => Regex.Replace(input, pattern, replacement);
+            [ExcelArgument("If a capture group is used it can be reference with $1, or if is explicitly referenced you can use $Name")]
+            string replacement
+        ) => Regex.Replace(input, pattern, replacement);
 
         [ExcelFunction(Category = "EXF Regular Expression", Name = "RE.COUNT",
             Description = "Counts the number of pattern matches in the input.")]
@@ -58,20 +59,28 @@ namespace ExcelExtraFunctions.Functions
                     .ToArray();
         }
 
-        [ExcelFunction(Category = "EXF Regular Expression", Name = "RE.SUBMATCHES",
-            Description = "Returns array of submatches of the first matched pattern in the input string.")]
-        public static object Submatches(string input, string pattern)
+        [ExcelFunction(Category = "EXF Regular Expression", Name = "RE.GROUPS",
+            Description = "Returns 2D array of the groups of each match. Can return full match")]
+        public static object Groups(string input, string pattern,
+            [ExcelArgument("Includes the full match along with the group of matches at the front of the array")]
+                bool includeFullMatch = false)
         {
-            if (Regex.IsMatch(input, pattern))
-            {
-                return Regex.Match(input, pattern).Groups
-                    .Cast<Group>()
-                    .Select(g => g.Value)
-                    .Skip(1)
-                    .ToArray();
-            }
-            else
-                return ExcelError.ExcelErrorValue;
+            if (string.IsNullOrEmpty(pattern))
+                return ExcelErrorValue;
+
+            MatchCollection matches = Regex.Matches(input, pattern);
+            if (matches.Count == 0 || matches[0].Groups.Count == 0)
+                return ExcelErrorNA;
+
+            int includeInt = includeFullMatch ? 0 : 1;
+            var array = new string[matches.Count,
+                matches[0].Groups.Count - includeInt];
+
+            foreach (var (match, x) in matches.Cast<Match>().Select((m, i) => (m, i)))
+                foreach (var (group, y) in match.Groups.Cast<Group>().Skip(includeInt).Select((g, i) => (g: g, i: i)))
+                    array[x, y] = group.Value;
+
+            return array;
         }
     }
 }
