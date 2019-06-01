@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using ExcelDna.Integration;
+using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using static ExcelDna.Integration.ExcelError;
 using static ExcelExtraFunctions.Functions.RegularExpressions;
@@ -24,6 +25,21 @@ namespace ExcelExtraFunctions.Tests
         public void Match_Tests(string source, string pattern, object result)
         {
             Match(source, pattern).Should().Be(result);
+        }
+
+        [TestMethod]
+        public void Matches_OnSuccessReturnArray()
+        {
+            Matches("a1b2c3", "[a-z][0-9]")
+                .Should().BeEquivalentTo(new[] { "a1", "b2", "c3" });
+        }
+
+        [DataTestMethod]
+        [DataRow("abc123", "[x-z]{3}[0-9]{3}", ExcelErrorNA)]
+        [DataRow("abc123", "", ExcelErrorValue)]
+        public void Matches_Errors(string source, string pattern, ExcelError result)
+        {
+            Matches(source, pattern).Should().Be(result);
         }
     }
 }

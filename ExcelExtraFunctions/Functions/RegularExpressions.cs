@@ -46,15 +46,16 @@ namespace ExcelExtraFunctions.Functions
             Description = "Returns array of matched patterns in the input string.")]
         public static object Matches(string input, string pattern)
         {
-            if (Regex.IsMatch(input, pattern))
-            {
-                return Regex.Matches(input, pattern)
-                    .Cast<Match>()
+            if (string.IsNullOrEmpty(pattern))
+                return ExcelErrorValue;
+
+            MatchCollection matches = Regex.Matches(input, pattern);
+            if (matches.Count == 0)
+                return ExcelErrorNA;
+
+            return matches.Cast<Match>()
                     .Select(m => m.Value)
                     .ToArray();
-            }
-            else
-                return ExcelError.ExcelErrorValue;
         }
 
         [ExcelFunction(Category = "EXF Regular Expression", Name = "RE.SUBMATCHES",
