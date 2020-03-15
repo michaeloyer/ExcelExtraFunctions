@@ -1,23 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace ExcelExtraFunctions.Extensions
 {
     internal static class RangeObjectExtensions
     {
-        internal static int RowCount(this object[,] range)
-        {
-            return range.GetLength(0);
-        }
-
-        internal static int ColumnCount(this object[,] range)
-        {
-            return range.GetLength(1);
-        }
-
         /// <summary>
         /// Converts a range to an IEnumerable by row and then by column.
         /// </summary>
@@ -26,8 +12,8 @@ namespace ExcelExtraFunctions.Extensions
         /// <returns></returns>
         internal static IEnumerable<object> SelectByRow(this object[,] range)
         {
-            for (int x = 0; x < range.RowCount(); x++)
-                for (int y = 0; y < range.ColumnCount(); y++)
+            for (int x = 0; x < range.GetLength(0); x++)
+                for (int y = 0; y < range.GetLength(1); y++)
                     yield return range[x, y];
         }
 
@@ -39,8 +25,8 @@ namespace ExcelExtraFunctions.Extensions
         /// <returns></returns>
         internal static IEnumerable<object> SelectByColumn(this object[,] range)
         {
-            for (int y = 0; y < range.ColumnCount(); y++)
-                for (int x = 0; x < range.RowCount(); x++)
+            for (int y = 0; y < range.GetLength(1); y++)
+                for (int x = 0; x < range.GetLength(0); x++)
                     yield return range[x, y];
         }
 

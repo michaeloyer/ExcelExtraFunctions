@@ -61,7 +61,7 @@ namespace ExcelExtraFunctions.Functions
                 matches[0].Groups.Count - includeInt];
 
             foreach (var (match, x) in matches.Cast<Match>().Select((m, i) => (m, i)))
-                foreach (var (group, y) in match.Groups.Cast<Group>().Skip(includeInt).Select((g, i) => (g: g, i: i)))
+                foreach (var (group, y) in match.Groups.Cast<Group>().Skip(includeInt).Select((g, i) => (g, i)))
                     array[x, y] = group.Value;
 
             return array;

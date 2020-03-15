@@ -18,22 +18,19 @@ namespace ExcelExtraFunctions.Extensions
             if (occurance > 0)
             {
                 var index = -1;
-                do
-                {
-                    index = searchString.IndexOf(value, index + 1, comparisonType);
-                    occurance--;
-                } while (occurance > 0 && index != -1);
+                for (int i = 0; i < occurance; i++)
+                    if ((index = searchString.IndexOf(value, index + 1, comparisonType)) == -1)
+                        break;
 
                 return index;
             }
             else if (occurance < 0)
             {
                 int index = searchString.Length;
-                do
-                {
-                    occurance++;
-                    index = searchString.LastIndexOf(value, index - 1, comparisonType);
-                } while (occurance < 0 && index != -1);
+
+                for (int i = 0; i > occurance; i--)
+                    if ((index = searchString.LastIndexOf(value, index - 1, comparisonType)) == -1)
+                        break;
 
                 return index;
             }
